@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,10 +16,9 @@ type CardContent = {
   template: `
     <mat-toolbar color="primary"> Responsive Card Grid </mat-toolbar>
     <div class="container responsive-grid">
-      <mat-card *ngFor="let card of cards">
+      <mat-card *ngFor="let card of cards()">
         <mat-card-header>
           <mat-card-title>{{ card.title }} </mat-card-title>
-          <mat-card-subtitle></mat-card-subtitle>
         </mat-card-header>
         <br />
         <img mat-card-image [src]="card.imageUrl" />
@@ -58,28 +57,31 @@ type CardContent = {
   imports: [CommonModule, MatCardModule, MatToolbarModule, MatButtonModule],
 })
 export class AppComponent {
-  cards: CardContent[] = [];
+  cards = signal<CardContent[]>([]);
 
   images = [
-    'kr9HOdBFjuk',
-    'ifjEbN18R44',
-    'urMbGaBBjbg',
-    '05_yqWFbc2E',
-    'O2hktlhRAyg',
-    'Jd3Ai-1f9H0',
-    'SWbCLJBDVnA',
-    'x7peUIju0u0',
-    'vH0UeskIkD8',
-    'sm-LdPd-ILc',
+    'nature',
+    'sky',
+    'grass',
+    'mountains',
+    'rivers',
+    'glacier',
+    'forest',
+    'streams',
+    'rain',
+    'clouds',
   ];
 
   constructor() {
+    const cards: CardContent[] = [];
     for (let i = 0; i < this.images.length; i++) {
-      this.cards.push({
+      cards.push({
         title: `Card ${i + 1}`,
         description: `Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. `,
-        imageUrl: `https://source.unsplash.com/${this.images[i]}/300X300`,
+        imageUrl: `https://source.unsplash.com/random/500X500?${this.images[i]}`,
       });
     }
+
+    this.cards.set(cards);
   }
 }
